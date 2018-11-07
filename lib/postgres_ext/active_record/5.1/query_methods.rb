@@ -1,4 +1,4 @@
-require 'postgres_ext/active_record/5.0/relation/query_methods'
+require 'postgres_ext/active_record/5.1/relation/query_methods'
 
 module ActiveRecord
   module QueryMethods

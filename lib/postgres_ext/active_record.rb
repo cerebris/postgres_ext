@@ -3,10 +3,17 @@ require 'active_record/relation'
 require 'postgres_ext/active_record/relation'
 require 'postgres_ext/active_record/cte_proxy'
 
-gdep = Gem::Dependency.new('activerecord', '~> 5.0.0')
-ar_version_cutoff = gdep.matching_specs.sort_by(&:version).last
+gdep = Gem::Dependency.new('activerecord', '~> 5.0')
+ar_version_cutoff_5_0 = gdep.matching_specs.sort_by(&:version).last
 
-if ar_version_cutoff
+gdep = Gem::Dependency.new('activerecord', '~> 5.1')
+ar_version_cutoff_5_1 = gdep.matching_specs.sort_by(&:version).last
+
+if ar_version_cutoff_5_1
+  require 'postgres_ext/active_record/5.1/query_methods'
+  require 'postgres_ext/active_record/5.1/querying'
+  require 'postgres_ext/active_record/5.1/relation'
+elsif ar_version_cutoff_5_0
   require 'postgres_ext/active_record/5.0/query_methods'
   require 'postgres_ext/active_record/5.0/querying'
   require 'postgres_ext/active_record/5.0/relation'

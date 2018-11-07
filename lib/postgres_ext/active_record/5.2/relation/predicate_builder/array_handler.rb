@@ -21,6 +21,7 @@ module ActiveRecord
       end
     end
 
+
     module ArrayHandlerPatch
       extend ActiveSupport::Concern
 

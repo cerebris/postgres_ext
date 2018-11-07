@@ -1,16 +1,24 @@
-gdep_4_2 = Gem::Dependency.new('activerecord', '>= 4.2')
-ar_4_2_version_cutoff = gdep_4_2.matching_specs.sort_by(&:version).last
-
-gdep_5_0 = Gem::Dependency.new('activerecord', '~> 5')
-ar_5_0_version_cutoff = gdep_5_0.matching_specs.sort_by(&:version).last
+ar_major = Gem.loaded_specs["activerecord"].version.segments[0]
+ar_minor = Gem.loaded_specs["activerecord"].version.segments[1]
 
 require 'postgres_ext/active_record/relation/merger'
-require 'postgres_ext/active_record/relation/query_methods'
 
-if ar_5_0_version_cutoff
-  require 'postgres_ext/active_record/5.0/relation/predicate_builder/array_handler'
-elsif ar_4_2_version_cutoff
-  require 'postgres_ext/active_record/relation/predicate_builder/array_handler'
-else
-  require 'postgres_ext/active_record/4.x/relation/predicate_builder'
+case ar_major
+when 5
+  case ar_minor
+  when 0
+    require 'postgres_ext/active_record/5.0/relation/predicate_builder/array_handler'
+    require 'postgres_ext/active_record/5.0/relation/query_methods'
+  else
+    require 'postgres_ext/active_record/5.1/relation/predicate_builder/array_handler'
+    require 'postgres_ext/active_record/5.1/relation/query_methods'
+  end
+when 4
+  require 'postgres_ext/active_record/4.x/query_methods'
+  case ar_minor
+  when 2
+    require 'postgres_ext/active_record/4.2/relation/predicate_builder/array_handler'
+  else
+    require 'postgres_ext/active_record/4.x/relation/predicate_builder'
+  end
 end
